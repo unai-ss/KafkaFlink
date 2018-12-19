@@ -1,0 +1,603 @@
+#
+VAGRANTFILE_API_VERSION = "2"
+
+# define hostname
+NAME = "ol7-vagrant"
+
+unless Vagrant.has_plugin?("vagrant-reload")
+  puts 'Installing vagrant-reload Plugin...'
+  system('vagrant plugin install vagrant-reload')
+end
+
+unless Vagrant.has_plugin?("vagrant-proxyconf")
+  puts 'Installing vagrant-proxyconf Plugin...'
+  system('vagrant plugin install vagrant-proxyconf')
+end
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.define "Kafka1" do |kfk1|
+    kfk1.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    kfk1.vm.box_version = "17.11.24"
+    kfk1.vm.define "Kafka1"
+    kfk1.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.207"
+    kfk1.vm.network "private_network", ip: "172.16.1.2"
+#    kfk1.vm.synced_folder "./",  "/tmp/sync"
+    kfk1.vm.box_url = "\n"
+    kfk1.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 256]
+      v.customize ["modifyvm", :id, "--name", "Kafka1"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+
+    kfk1.vm.box_check_update = false
+
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        kfk1.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        kfk1.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        kfk1.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+
+    # VM hostname
+    kfk1.vm.hostname = "Kafka1"
+
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+
+    # Provision everything on the first run
+    #kfk1.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #kfk1.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #kfk1.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #kfk1.vm.provision "shell", path: "scripts/installKafka1.sh"
+    # kfk1.vm.provision :reload
+    kfk1.vm.provision "shell", inline: "echo 'INSTALLER Kafka1: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+  config.vm.define "Kafka2" do |kfk2|
+    kfk2.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    kfk2.vm.box_version = "17.11.24"
+    kfk2.vm.define "Kafka2"
+    kfk2.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.211"
+    kfk2.vm.network "private_network", ip: "172.16.1.11"
+#    kfk2.vm.synced_folder "./",  "/tmp/sync"
+    kfk2.vm.box_url = "\n"
+    kfk2.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 256]
+      v.customize ["modifyvm", :id, "--name", "Kafka2"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+
+    kfk2.vm.box_check_update = false
+
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        kfk2.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        kfk2.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        kfk2.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+
+    # VM hostname
+    kfk2.vm.hostname = "Kafka2"
+
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+
+    # Provision everything on the first run
+    #kfk2.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #kfk2.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #kfk2.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #kfk2.vm.provision "shell", path: "scripts/installKafka2.sh"
+    # kfk2.vm.provision :reload
+    kfk2.vm.provision "shell", inline: "echo 'INSTALLER Kafka2: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+  config.vm.define "Kafka3" do |kfk3|
+    kfk3.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    kfk3.vm.box_version = "17.11.24"
+    kfk3.vm.define "Kafka3"
+    kfk3.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.212"
+    kfk3.vm.network "private_network", ip: "172.16.1.12"
+#    kfk3.vm.synced_folder "./",  "/tmp/sync"
+    kfk3.vm.box_url = "\n"
+    kfk3.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 256]
+      v.customize ["modifyvm", :id, "--name", "Kafka3"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+
+    kfk3.vm.box_check_update = false
+
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        kfk3.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        kfk3.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        kfk3.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+
+    # VM hostname
+    kfk3.vm.hostname = "Kafka3"
+
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+
+    # Provision everything on the first run
+    #kfk3.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #kfk3.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #kfk3.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #kfk3.vm.provision "shell", path: "scripts/installKafka3.sh"
+    # kfk3.vm.provision :reload
+    kfk3.vm.provision "shell", inline: "echo 'INSTALLER Kafka3: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+  config.vm.define "Flink" do |flink|
+    flink.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    flink.vm.box_version = "17.11.24"
+    flink.vm.define "Flink"
+    flink.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.213"
+    flink.vm.network "private_network", ip: "172.16.1.13"
+#    flink.vm.synced_folder "./",  "/tmp/sync"
+    flink.vm.box_url = "\n"
+    flink.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 256]
+      v.customize ["modifyvm", :id, "--name", "Flink"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+
+    flink.vm.box_check_update = false
+
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        flink.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        flink.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        flink.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+
+    # VM hostname
+    flink.vm.hostname = "Flink"
+
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+
+    # Provision everything on the first run
+    #flink.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #flink.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #flink.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #flink.vm.provision "shell", path: "scripts/installFlink.sh"
+    # flink.vm.provision :reload
+    flink.vm.provision "shell", inline: "echo 'INSTALLER Flink: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+  config.vm.define "Flink1" do |flink1|
+    flink1.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    flink1.vm.box_version = "17.11.24"
+    flink1.vm.define "Flink1"
+    flink1.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.214"
+    flink1.vm.network "private_network", ip: "172.16.1.14"
+#    flink1.vm.synced_folder "./",  "/tmp/sync"
+    flink1.vm.box_url = "\n"
+    flink1.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 256]
+      v.customize ["modifyvm", :id, "--name", "Flink1"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+
+    flink1.vm.box_check_update = false
+
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        flink1.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        flink1.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        flink1.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+
+    # VM hostname
+    flink1.vm.hostname = "Flink1"
+
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+
+    # Provision everything on the first run
+    #flink1.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #flink1.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #flink1.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #flink1.vm.provision "shell", path: "scripts/installFlink.sh"
+    # flink1.vm.provision :reload
+    flink1.vm.provision "shell", inline: "echo 'INSTALLER Flink1: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+  config.vm.define "Flinkw1" do |flinkw1|
+    flinkw1.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    flinkw1.vm.box_version = "17.11.24"
+    flinkw1.vm.define "Flinkw1"
+    flinkw1.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.215"
+    flinkw1.vm.network "private_network", ip: "172.16.1.15"
+#    flinkw1.vm.synced_folder "./",  "/tmp/sync"
+    flinkw1.vm.box_url = "\n"
+    flinkw1.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 128]
+      v.customize ["modifyvm", :id, "--name", "Flinkw1"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+
+    flinkw1.vm.box_check_update = false
+
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        flinkw1.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        flinkw1.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        flinkw1.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+
+    # VM hostname
+    flinkw1.vm.hostname = "Flinkw1"
+
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+
+    # Provision everything on the first run
+    #flinkw1.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #flinkw1.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #flinkw1.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #flinkw1.vm.provision "shell", path: "scripts/installFlinkw1.sh"
+    # flinkw1.vm.provision :reload
+    flinkw1.vm.provision "shell", inline: "echo 'INSTALLER Flinkw1: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+  config.vm.define "Flinkw2" do |flinkw2|
+    flinkw2.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    flinkw2.vm.box_version = "17.11.24"
+    flinkw2.vm.define "Flinkw2"
+    flinkw2.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.216"
+    flinkw2.vm.network "private_network", ip: "172.16.1.16"
+#    flinkw2.vm.synced_folder "./",  "/tmp/sync"
+    flinkw2.vm.box_url = "\n"
+    flinkw2.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 128]
+      v.customize ["modifyvm", :id, "--name", "Flinkw2"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+
+    flinkw2.vm.box_check_update = false
+
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        flinkw2.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        flinkw2.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        flinkw2.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+
+    # VM hostname
+    flinkw2.vm.hostname = "Flinkw2"
+
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+
+    # Provision everything on the first run
+    #flinkw2.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #flinkw2.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #flinkw2.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #flinkw2.vm.provision "shell", path: "scripts/installFlinkw2.sh"
+    # flinkw2.vm.provision :reload
+    flinkw2.vm.provision "shell", inline: "echo 'INSTALLER Flinkw2: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+  config.vm.define "Flinkw3" do |flinkw3|
+    flinkw3.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    flinkw3.vm.box_version = "17.11.24"
+    flinkw3.vm.define "Flinkw3"
+    flinkw3.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.217"
+    flinkw3.vm.network "private_network", ip: "172.16.1.17"
+#    flinkw2.vm.synced_folder "./",  "/tmp/sync"
+    flinkw3.vm.box_url = "\n"
+    flinkw3.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 128]
+      v.customize ["modifyvm", :id, "--name", "Flinkw3"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+
+    flinkw3.vm.box_check_update = false
+
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        flinkw3.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        flinkw3.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        flinkw3.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+
+    # VM hostname
+    flinkw3.vm.hostname = "Flinkw3"
+
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+
+    # Provision everything on the first run
+    #flinkw3.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #flinkw3.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #flinkw3.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #flinkw3.vm.provision "shell", path: "scripts/installFlinkw2.sh"
+    # flinkw3.vm.provision :reload
+    flinkw3.vm.provision "shell", inline: "echo 'INSTALLER Flinkw3: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+#  Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    config.vm.define "ZooK1" do |zook1|
+      zook1.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+      zook1.vm.box_version = "17.11.24"
+      zook1.vm.define "ZooK1"
+      zook1.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.208"
+      zook1.vm.network "private_network", ip: "172.16.1.3"
+  #    zook1.vm.synced_folder "./",  "/tmp/sync"
+      zook1.vm.box_url = "\n"
+      zook1.vm.provider :virtualbox do |v|
+        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        v.customize ["modifyvm", :id, "--memory", 256]
+        v.customize ["modifyvm", :id, "--name", "ZooK1"]
+        v.customize ["modifyvm", :id, "--usb", "on"]
+        v.customize ["modifyvm", :id, "--usbehci", "off"]
+        v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+      end
+      zook1.vm.box_check_update = false
+      # add proxy configuration from host env - optional
+      if Vagrant.has_plugin?("vagrant-proxyconf")
+        puts "getting Proxy Configuration from Host..."
+        if ENV["http_proxy"]
+          puts "http_proxy: " + ENV["http_proxy"]
+          zook1.proxy.http     = ENV["http_proxy"]
+        end
+        if ENV["https_proxy"]
+          puts "https_proxy: " + ENV["https_proxy"]
+          zook1.proxy.https    = ENV["https_proxy"]
+        end
+        if ENV["no_proxy"]
+          zook1.proxy.no_proxy = ENV["no_proxy"]
+        end
+      end
+      # VM hostname
+      zook1.vm.hostname = "ZooK1"
+      # Oracle port forwarding
+      # config.vm.network "forwarded_port", guest: 22, host: 2220
+      # Provision everything on the first run
+      #zook1.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+      #zook1.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+#      zook1.vm.provision "shell", path: "scripts/java_1_8.sh"
+#      zook1.vm.provision "shell", path: "scripts/installZooK.sh"
+      # zook1.vm.provision :reload
+      zook1.vm.provision "shell", inline: "echo 'INSTALLER ZooK1: Installation complete, Oracle Linux 7 ready to use!'"
+    end
+#  end
+  config.vm.define "ZooK2" do |zook2|
+    zook2.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    zook2.vm.box_version = "17.11.24"
+    zook2.vm.define "ZooK2"
+    zook2.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.209"
+    zook2.vm.network "private_network", ip: "172.16.1.4"
+    #    zook2.vm.synced_folder "./",  "/tmp/sync"
+    zook2.vm.box_url = "\n"
+    zook2.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 256]
+      v.customize ["modifyvm", :id, "--name", "ZooK2"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+    zook2.vm.box_check_update = false
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        zook2.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        zook2.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        zook2.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+    # VM hostname
+    zook2.vm.hostname = "ZooK2"
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+    # Provision everything on the first run
+    #zook2.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #zook2.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #      zook2.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #      zook2.vm.provision "shell", path: "scripts/installZooK.sh"
+    # zook2.vm.provision :reload
+    zook2.vm.provision "shell", inline: "echo 'INSTALLER ZooK2: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+
+  config.vm.define "ZooK3" do |zook3|
+    zook3.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    zook3.vm.box_version = "17.11.24"
+    zook3.vm.define "ZooK3"
+    zook3.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.210"
+    zook3.vm.network "private_network", ip: "172.16.1.5"
+    #    zook3.vm.synced_folder "./",  "/tmp/sync"
+    zook3.vm.box_url = "\n"
+    zook3.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 256]
+      v.customize ["modifyvm", :id, "--name", "ZooK3"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+    zook3.vm.box_check_update = false
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        zook3.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        zook3.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        zook3.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+    # VM hostname
+    zook3.vm.hostname = "ZooK3"
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+    # Provision everything on the first run
+    #zook3.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #zook3.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+    #      zook3.vm.provision "shell", path: "scripts/java_1_8.sh"
+    #      zook3.vm.provision "shell", path: "scripts/installZooK.sh"
+    # zook3.vm.provision :reload
+    zook3.vm.provision "shell", inline: "echo 'INSTALLER ZooK3: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+  config.vm.define "ZooK" do |zook|
+    zook.vm.box = "CentosBox/Centos-7-v7.4-Minimal-CLI"
+    zook.vm.box_version = "17.11.24"
+    zook.vm.define "ZooK1"
+    zook.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", ip: "192.168.1.208"
+    zook.vm.network "private_network", ip: "172.16.1.3"
+#    zook.vm.synced_folder "./",  "/tmp/sync"
+    zook.vm.box_url = "\n"
+    zook.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 256]
+      v.customize ["modifyvm", :id, "--name", "ZooK"]
+      v.customize ["modifyvm", :id, "--usb", "on"]
+      v.customize ["modifyvm", :id, "--usbehci", "off"]
+      v.customize ["modifyvm", :id, "--macaddress1", "auto"]
+    end
+    zook.vm.box_check_update = false
+    # add proxy configuration from host env - optional
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      puts "getting Proxy Configuration from Host..."
+      if ENV["http_proxy"]
+        puts "http_proxy: " + ENV["http_proxy"]
+        zook.proxy.http     = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+        puts "https_proxy: " + ENV["https_proxy"]
+        zook.proxy.https    = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+        zook.proxy.no_proxy = ENV["no_proxy"]
+      end
+    end
+    # VM hostname
+    zook.vm.hostname = "ZooK"
+    # Oracle port forwarding
+    # config.vm.network "forwarded_port", guest: 22, host: 2220
+    # Provision everything on the first run
+    #zook1.vm.provision "file", source: "~/github/BigDataOracleSparkHBase/jre-8u181-linux-x64.rpm", destination: "/tmp"
+    #zook1.vm.provision "file", source: "./scripts/zookeeper.service", destination: "/tmp"
+#      zook1.vm.provision "shell", path: "scripts/java_1_8.sh"
+#      zook1.vm.provision "shell", path: "scripts/installZooK.sh"
+    # zook1.vm.provision :reload
+    zook.vm.provision "shell", inline: "echo 'INSTALLER ZooK: Installation complete, Oracle Linux 7 ready to use!'"
+  end
+#  end
+
+
+
+end
